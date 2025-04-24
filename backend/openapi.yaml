@@ -1,0 +1,654 @@
+openapi: 3.0.0
+info:
+  title: AI Startup Blogs API
+  version: 1.0.0
+  description: >
+    This API provides endpoints for user authentication, post management,
+    engagement (comments, claps, bookmarks), tag retrieval, reporting, and
+    password resets for the AI Startup Blogs platform.
+servers:
+  - url: http://localhost:1337
+paths:
+  /api/users/register:
+    post:
+      summary: Register a new user
+      operationId: register_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistration"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+  /api/users/login:
+    post:
+      summary: Login user
+      operationId: login_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+      responses:
+        "200":
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+  /api/users/{uid}:
+    get:
+      summary: Retrieve user profile information
+      operationId: get_user_profile
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      summary: Update user profile information
+      operationId: update_user_profile
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/posts:
+    post:
+      summary: Create a new blog post
+      operationId: create_post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostCreate"
+      responses:
+        "201":
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+    get:
+      summary: Retrieve a list of published blog posts
+      operationId: list_posts
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of posts per page
+          schema:
+            type: integer
+        - name: tag
+          in: query
+          description: Filter posts by tag uid
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search posts by keyword
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /api/posts/{uid}:
+    get:
+      summary: Retrieve detailed information of a specific post
+      operationId: get_post
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostDetail"
+    put:
+      summary: Update an existing blog post
+      operationId: update_post
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUpdate"
+      responses:
+        "200":
+          description: Post updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+    delete:
+      summary: Delete a blog post
+      operationId: delete_post
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Post deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+  /api/posts/{post_uid}/comments:
+    post:
+      summary: Create a new comment on a post
+      operationId: create_comment
+      parameters:
+        - name: post_uid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreate"
+      responses:
+        "201":
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+  /api/comments/{uid}:
+    put:
+      summary: Update an existing comment
+      operationId: update_comment
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the comment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentUpdate"
+      responses:
+        "200":
+          description: Comment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+    delete:
+      summary: Delete a comment
+      operationId: delete_comment
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the comment
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Comment deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+  /api/claps:
+    post:
+      summary: Add a clap to a post
+      operationId: add_clap
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClapRequest"
+      responses:
+        "200":
+          description: Clap recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Clap"
+  /api/bookmarks:
+    post:
+      summary: Add a bookmark to a post
+      operationId: add_bookmark
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookmarkRequest"
+      responses:
+        "200":
+          description: Bookmark added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+    delete:
+      summary: Remove a bookmark from a post
+      operationId: remove_bookmark
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookmarkRequest"
+      responses:
+        "200":
+          description: Bookmark removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+  /api/tags:
+    get:
+      summary: Retrieve all available tags
+      operationId: list_tags
+      responses:
+        "200":
+          description: List of tags retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tag"
+  /api/reports:
+    post:
+      summary: Report a post or comment for moderation
+      operationId: create_report
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportCreate"
+      responses:
+        "201":
+          description: Report submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+  /api/password_resets:
+    post:
+      summary: Initiate a password reset process
+      operationId: initiate_password_reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetRequest"
+      responses:
+        "200":
+          description: Password reset initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRegistration:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    UserLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        profile_image:
+          type: string
+        bio:
+          type: string
+        social_links:
+          type: object
+          additionalProperties:
+            type: string
+    User:
+      type: object
+      properties:
+        uid:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        profile_image:
+          type: string
+        bio:
+          type: string
+        social_links:
+          type: object
+          additionalProperties:
+            type: string
+        is_admin:
+          type: boolean
+        created_at:
+          type: number
+        updated_at:
+          type: number
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+    PostCreate:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          maxLength: 150
+        content:
+          type: string
+        featured_image:
+          type: string
+        status:
+          type: string
+          enum:
+            - draft
+            - published
+          default: draft
+        tags:
+          type: array
+          items:
+            type: string
+    PostUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 150
+        content:
+          type: string
+        featured_image:
+          type: string
+        status:
+          type: string
+          enum:
+            - draft
+            - published
+        tags:
+          type: array
+          items:
+            type: string
+    Post:
+      type: object
+      properties:
+        uid:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        featured_image:
+          type: string
+        status:
+          type: string
+        author_uid:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: number
+        updated_at:
+          type: number
+    PostDetail:
+      allOf:
+        - $ref: "#/components/schemas/Post"
+        - type: object
+          properties:
+            author:
+              $ref: "#/components/schemas/User"
+    CommentCreate:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+        parent_comment_uid:
+          type: string
+    CommentUpdate:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+    Comment:
+      type: object
+      properties:
+        uid:
+          type: string
+        post_uid:
+          type: string
+        user_uid:
+          type: string
+        content:
+          type: string
+        parent_comment_uid:
+          type: string
+        created_at:
+          type: number
+        updated_at:
+          type: number
+    ClapRequest:
+      type: object
+      required:
+        - post_uid
+      properties:
+        post_uid:
+          type: string
+        increment:
+          type: number
+          default: 1
+    Clap:
+      type: object
+      properties:
+        user_uid:
+          type: string
+        post_uid:
+          type: string
+        clap_count:
+          type: number
+        created_at:
+          type: number
+    BookmarkRequest:
+      type: object
+      required:
+        - post_uid
+      properties:
+        post_uid:
+          type: string
+    Bookmark:
+      type: object
+      properties:
+        user_uid:
+          type: string
+        post_uid:
+          type: string
+        created_at:
+          type: number
+    Tag:
+      type: object
+      properties:
+        uid:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: number
+        updated_at:
+          type: number
+    ReportCreate:
+      type: object
+      required:
+        - report_type
+        - object_uid
+      properties:
+        report_type:
+          type: string
+          enum:
+            - post
+            - comment
+        object_uid:
+          type: string
+        reason:
+          type: string
+    Report:
+      type: object
+      properties:
+        uid:
+          type: string
+        report_type:
+          type: string
+        object_uid:
+          type: string
+        reported_by_uid:
+          type: string
+        reason:
+          type: string
+        created_at:
+          type: number
+    PasswordResetRequest:
+      type: object
+      required:
+        - user_email
+      properties:
+        user_email:
+          type: string
+          format: email
+    PasswordResetResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expire_at:
+          type: number
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string

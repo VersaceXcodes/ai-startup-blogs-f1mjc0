@@ -1,0 +1,19 @@
+{
+  "timestamp": 1745434162997,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_ForgotPassword",
+      "version": "latest"
+    }
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/vitereact/src/components/views/UV_ForgotPassword.tsx",
+      "type": "text",
+      "size": 2999,
+      "dependencies": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": 1745433492982,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Login",
+      "version": "latest"
+    }
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/vitereact/src/components/views/UV_Login.tsx",
+      "type": "text",
+      "size": 5501,
+      "dependencies": false
+    }
+  ]
+}

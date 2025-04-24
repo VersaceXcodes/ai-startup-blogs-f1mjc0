@@ -1,0 +1,15 @@
+{
+  "timestamp": 1745432954780,
+  "operation": {
+    "id": "backend:server:main"
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/backend/server.js",
+      "type": "text",
+      "size": 24047,
+      "dependencies": false
+    }
+  ]
+}

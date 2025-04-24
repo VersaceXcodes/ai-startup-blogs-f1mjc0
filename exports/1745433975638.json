@@ -1,0 +1,19 @@
+{
+  "timestamp": 1745433975638,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_PostEditor",
+      "version": "latest"
+    }
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/vitereact/src/components/views/UV_PostEditor.tsx",
+      "type": "text",
+      "size": 4517,
+      "dependencies": false
+    }
+  ]
+}

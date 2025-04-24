@@ -1,0 +1,21 @@
+{
+  "timestamp": 1745432955872,
+  "operation": {
+    "id": "settings:config:package"
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/backend/package.json",
+      "type": "text",
+      "size": 782,
+      "dependencies": true
+    },
+    {
+      "path": "../../apps/ai-startup-blogs/backend/.env",
+      "type": "text",
+      "size": 171,
+      "dependencies": false
+    }
+  ]
+}

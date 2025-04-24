@@ -1,0 +1,19 @@
+{
+  "timestamp": 1745433554121,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_ProfileEdit",
+      "version": "latest"
+    }
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/vitereact/src/components/views/UV_ProfileEdit.tsx",
+      "type": "text",
+      "size": 8467,
+      "dependencies": false
+    }
+  ]
+}

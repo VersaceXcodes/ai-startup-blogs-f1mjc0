@@ -1,0 +1,19 @@
+{
+  "timestamp": 1745434057906,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Registration",
+      "version": "1745434057000"
+    }
+  },
+  "projectId": "ai-startup-blogs",
+  "files": [
+    {
+      "path": "../../apps/ai-startup-blogs/vitereact/src/components/views/UV_Registration.tsx",
+      "type": "text",
+      "size": 7328,
+      "dependencies": false
+    }
+  ]
+}
