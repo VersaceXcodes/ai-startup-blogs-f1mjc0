@@ -127,3 +127,45 @@ const UV_PostEditor: React.FC = () => {
     insertAtCursor("\n> Blockquote\n");
   };
   const handleInsertCode = () => {
+    insertAtCursor("\n```\ncode block\n```\n");
+  };
+
+  const handleSaveDraft = async (isAutoSave = false) => {
+    try {
+      const postData = {
+        title,
+        content,
+        featured_image: featuredImage,
+        tags,
+        status: "draft",
+      };
+
+      const response = await axios.post(`${API_BASE_URL}/api/posts`, postData, {
+        headers: {
+          Authorization: `Bearer ${auth_state.token}`,
+        },
+      });
+
+      if (!isAutoSave) {
+        dispatch(add_app_notification({ message: "Draft saved successfully", type: "success" }));
+      }
+      setUnsavedChanges(false);
+    } catch (err: any) {
+      if (!isAutoSave) {
+        dispatch(add_app_notification({ message: "Failed to save draft", type: "error" }));
+      }
+      setError({
+        errorCode: err.response?.status,
+        errorMessage: err.response?.data?.message || err.message,
+      });
+    }
+  };
+
+  return (
+    <div>
+      {/* Add your JSX for the post editor UI here */}
+    </div>
+  );
+};
+
+export default UV_PostEditor;
